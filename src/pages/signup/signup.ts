@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { UserProvider } from './../../providers/user/user';
+
 @IonicPage({ name: 'page-signup'})
 @Component({
   selector: 'page-signup',
@@ -14,7 +16,8 @@ export class SignupPage {
   constructor(
     public formBuilder: FormBuilder,
     public navCtrl: NavController, 
-    public navParams: NavParams
+    public navParams: NavParams,
+    public userProvider: UserProvider
   ) {
 
     let emailRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
@@ -29,11 +32,15 @@ export class SignupPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SignupPage');
+    
   }
 
   onSubmit(): void {
-    console.log("Submit");
+    // console.log(this.signupForm.value);
+    this.userProvider.createUser(this.signupForm.value)
+    // .then(() => {
+    //   console.log("Usuário cadastrado");
+    // });
   }
 
 }
