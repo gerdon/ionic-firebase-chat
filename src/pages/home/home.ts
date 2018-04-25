@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
 
 import { LazyloadPage } from './../lazyload/lazyload';
 import { SignupPage } from './../signup/signup';
 
-import { AngularFireList } from 'angularfire2/database';
-
-import { User } from './../../models/user.model';
 import { UserProvider } from './../../providers/user/user';
 
 @Component({
@@ -15,8 +13,10 @@ import { UserProvider } from './../../providers/user/user';
 })
 export class HomePage {
 
-  userList: AngularFireList<User[]>;
-  // userList: AngularFireList<any>;
+  // userList: AngularFireList<User[]>;
+  // userList: any;
+  userList: Observable<any[]>;
+
 
   constructor(
     public navCtrl: NavController,
