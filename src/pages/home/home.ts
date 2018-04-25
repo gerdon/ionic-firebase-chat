@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
 
 import { LazyloadPage } from './../lazyload/lazyload';
 import { SignupPage } from './../signup/signup';
+
+import { UserProvider } from './../../providers/user/user';
 
 @Component({
   selector: 'page-home',
@@ -10,8 +13,18 @@ import { SignupPage } from './../signup/signup';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  // userList: AngularFireList<User[]>;
+  // userList: any;
+  userList: Observable<any[]>;
 
+
+  constructor(
+    public navCtrl: NavController,
+    public userProvider: UserProvider) {
+  }
+
+  ionViewDidLoad(){
+    this.userList = this.userProvider.userList.valueChanges();
   }
 
   onLazyload(): void {
@@ -20,5 +33,9 @@ export class HomePage {
 
   onSignup(): void {
     this.navCtrl.push(SignupPage);
+  }
+
+  onChatCreate(user): void {
+
   }
 }
