@@ -22,9 +22,9 @@ export class UserProvider {
    * Cria o usuário com o uid do usuário de autenticação
    * @param user 
    */
-  createUser(user: User): void {
-    // this.db.list('/users').push(user);
-    this.db.database.ref(`/users/${user.uid}`).set(user);
-    console.log('Usuário criado!');
+  createUser(user: User): Promise<void> {
+    return this.db.object(`/users/${user.uid}`)
+      .set(user)
+      .catch();
   }
 }

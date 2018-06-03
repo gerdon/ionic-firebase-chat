@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
 
 import { User } from './../../models/user.model';
 
@@ -19,8 +19,10 @@ export class SignupPage {
   signupForm: FormGroup;
 
   constructor(
+    public alertCtrl: AlertController,
     public authProvider: AuthProvider,
     public formBuilder: FormBuilder,
+    public loadingCtrl: LoadingController,
     public navCtrl: NavController, 
     public navParams: NavParams,
     public userProvider: UserProvider
@@ -43,6 +45,7 @@ export class SignupPage {
 
   onSubmit(): void {
 
+    let loading = this.showLoading();
     let formUser = this.signupForm.value;
 
     this.authProvider.createAuthUser({
@@ -53,8 +56,45 @@ export class SignupPage {
       delete formUser.password;     //Deleta o password do formulário
       formUser.uid = authUser.uid;  //Cria o campo uid para usuário e atribui o uid do AuthUser
 
-      this.userProvider.createUser(formUser);
-    })
+      this.userProvider.createUser(formUser)
+        .then(() => {
+          console.log('Usuário cadastrado!');
+          loading.dismiss();
+        }).catch((error: Error) => {
+          console.log(error);
+          loading.dismiss();
+          this.showAlert(error.message);
+        });
+
+    }).catch((error: Error) => {
+      console.log(error);
+      loading.dismiss();
+      this.showAlert(error.message);
+    });
+  }
+
+  /**
+   * Exibe o load para informar o carregamento
+   */
+  private showLoading(): Loading {
+    let loading: Loading = this.loadingCtrl.create({
+      content: 'Por favor, aguarde...'
+    });
+
+    loading.present();
+
+    return loading;
+  }
+
+  /**
+   * Exibe um alert com uma mensagem
+   * @param message
+   */
+  private showAlert(message: string): void {
+    this.alertCtrl.create({
+      message: message,
+      buttons: ['Ok']
+    }).present();
   }
 
 }
