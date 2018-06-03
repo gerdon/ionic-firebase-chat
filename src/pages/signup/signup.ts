@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
+import 'rxjs/add/operator/first';
 
+
+import { User } from './../../models/user.model';
+
+import { AuthProvider } from './../../providers/auth/auth';
 import { UserProvider } from './../../providers/user/user';
+
+import * as firebase from 'firebase/app';
 
 @IonicPage({ name: 'page-signup'})
 @Component({
@@ -14,7 +21,10 @@ export class SignupPage {
   signupForm: FormGroup;
 
   constructor(
+    public alertCtrl: AlertController,
+    public authProvider: AuthProvider,
     public formBuilder: FormBuilder,
+    public loadingCtrl: LoadingController,
     public navCtrl: NavController, 
     public navParams: NavParams,
     public userProvider: UserProvider
@@ -36,11 +46,70 @@ export class SignupPage {
   }
 
   onSubmit(): void {
-    // console.log(this.signupForm.value);
-    this.userProvider.createUser(this.signupForm.value)
-    // .then(() => {
-    //   console.log("Usuário cadastrado");
-    // });
+
+    let loading = this.showLoading();
+    let formUser = this.signupForm.value;
+    let username: string = formUser.username;
+
+    this.userProvider.userExists(username)
+      .first()
+      .subscribe((userExists: boolean) => {
+
+        if(!userExists){
+          this.authProvider.createAuthUser({
+            email: formUser.email,
+            password: formUser.password
+          }).then((authUser: firebase.User) => {
+      
+            delete formUser.password;     //Deleta o password do formulário
+            formUser.uid = authUser.uid;  //Cria o campo uid para usuário e atribui o uid do AuthUser
+      
+            this.userProvider.createUser(formUser)
+              .then(() => {
+                console.log('Usuário cadastrado!');
+                loading.dismiss();
+              }).catch((error: any) => {
+                console.log(error);
+                loading.dismiss();
+                this.showAlert(error);
+              });
+      
+          }).catch((error: any) => {
+            console.log(error);
+            loading.dismiss();
+            this.showAlert(error);
+          });
+
+        } else {
+          this.showAlert(`O username ${username} já está sendo usado em outra conta`);
+          loading.dismiss();
+        }
+
+      })
+  }
+
+  /**
+   * Exibe o load para informar o carregamento
+   */
+  private showLoading(): Loading {
+    let loading: Loading = this.loadingCtrl.create({
+      content: 'Por favor, aguarde...'
+    });
+
+    loading.present();
+
+    return loading;
+  }
+
+  /**
+   * Exibe um alert com uma mensagem
+   * @param message
+   */
+  private showAlert(message: string): void {
+    this.alertCtrl.create({
+      message: message,
+      buttons: ['Ok']
+    }).present();
   }
 
 }
