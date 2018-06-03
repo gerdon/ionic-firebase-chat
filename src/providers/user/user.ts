@@ -2,11 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from '@firebase/util';
 
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { User } from '../../models/user.model';
 
+import { BaseProvider } from '../base/base';
+
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+
 @Injectable()
-export class UserProvider {
+export class UserProvider extends BaseProvider {
 
   userList: AngularFireList<User[]>;
 
@@ -15,6 +18,7 @@ export class UserProvider {
     public http: HttpClient
   ) 
   {
+    super();
     this.userList = this.db.list('/users');
   }
 
@@ -25,6 +29,6 @@ export class UserProvider {
   createUser(user: User): Promise<void> {
     return this.db.object(`/users/${user.uid}`)
       .set(user)
-      .catch();
+      .catch(this.handlePromiseError);
   }
 }

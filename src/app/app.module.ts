@@ -13,6 +13,7 @@ import { LazyloadPage } from './../pages/lazyload/lazyload';
 import { SignupPage } from './../pages/signup/signup';
 
 import { AuthProvider } from '../providers/auth/auth';
+import { BaseProvider } from '../providers/base/base';
 import { UserProvider } from '../providers/user/user';
 
 import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
@@ -56,7 +57,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserProvider,
+    UserProvider
   ]
 })
 export class AppModule {}

@@ -3,17 +3,19 @@ import { Injectable } from '@angular/core';
 
 import { User } from './../../models/user.model';
 
+import { BaseProvider } from '../base/base';
+
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 @Injectable()
-export class AuthProvider {
+export class AuthProvider extends BaseProvider {
 
   constructor(
     public auth: AngularFireAuth,
     public http: HttpClient
   ) {
-
+    super();
   }
 
   /**
@@ -21,7 +23,8 @@ export class AuthProvider {
    * @param user 
    */
   createAuthUser(user: {email: string, password: string}): Promise<firebase.User> {
-    return this.auth.auth.createUserWithEmailAndPassword(user.email, user.password);
+    return this.auth.auth.createUserWithEmailAndPassword(user.email, user.password)
+      .catch(this.handlePromiseError);
   }
 
 }
