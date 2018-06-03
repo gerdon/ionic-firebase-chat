@@ -1,6 +1,8 @@
 import { Component, ErrorHandler } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertController, IonicPage, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
+import 'rxjs/add/operator/first';
+
 
 import { User } from './../../models/user.model';
 
@@ -47,30 +49,43 @@ export class SignupPage {
 
     let loading = this.showLoading();
     let formUser = this.signupForm.value;
+    let username: string = formUser.username;
 
-    this.authProvider.createAuthUser({
-      email: formUser.email,
-      password: formUser.password
-    }).then((authUser: firebase.User) => {
+    this.userProvider.userExists(username)
+      .first()
+      .subscribe((userExists: boolean) => {
 
-      delete formUser.password;     //Deleta o password do formulário
-      formUser.uid = authUser.uid;  //Cria o campo uid para usuário e atribui o uid do AuthUser
+        if(!userExists){
+          this.authProvider.createAuthUser({
+            email: formUser.email,
+            password: formUser.password
+          }).then((authUser: firebase.User) => {
+      
+            delete formUser.password;     //Deleta o password do formulário
+            formUser.uid = authUser.uid;  //Cria o campo uid para usuário e atribui o uid do AuthUser
+      
+            this.userProvider.createUser(formUser)
+              .then(() => {
+                console.log('Usuário cadastrado!');
+                loading.dismiss();
+              }).catch((error: any) => {
+                console.log(error);
+                loading.dismiss();
+                this.showAlert(error);
+              });
+      
+          }).catch((error: any) => {
+            console.log(error);
+            loading.dismiss();
+            this.showAlert(error);
+          });
 
-      this.userProvider.createUser(formUser)
-        .then(() => {
-          console.log('Usuário cadastrado!');
+        } else {
+          this.showAlert(`O username ${username} já está sendo usado em outra conta`);
           loading.dismiss();
-        }).catch((error: any) => {
-          console.log(error);
-          loading.dismiss();
-          this.showAlert(error);
-        });
+        }
 
-    }).catch((error: any) => {
-      console.log(error);
-      loading.dismiss();
-      this.showAlert(error);
-    });
+      })
   }
 
   /**

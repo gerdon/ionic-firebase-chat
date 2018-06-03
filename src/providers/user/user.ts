@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from '@firebase/util';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
 
 import { User } from '../../models/user.model';
 
 import { BaseProvider } from '../base/base';
 
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import * as firebase from 'firebase/app';
 
 @Injectable()
 export class UserProvider extends BaseProvider {
@@ -31,4 +33,15 @@ export class UserProvider extends BaseProvider {
       .set(user)
       .catch(this.handlePromiseError);
   }
+
+  userExists(username: string): Observable<boolean> {
+    return this.db.list(`/users`,
+      (ref: firebase.database.Reference) => ref.orderByChild('username').equalTo(username)
+    )
+    .valueChanges()
+    .map((users: User[]) => {
+      return users.length > 0;
+    }).catch(this.handleObservableError);
+  }
+
 }
