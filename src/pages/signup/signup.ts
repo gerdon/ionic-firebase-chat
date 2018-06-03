@@ -43,13 +43,17 @@ export class SignupPage {
 
   onSubmit(): void {
 
-    let user: User = this.signupForm.value;
+    let formUser = this.signupForm.value;
 
     this.authProvider.createAuthUser({
-      email: user.email,
-      password: user.password
+      email: formUser.email,
+      password: formUser.password
     }).then((authUser: firebase.User) => {
-      this.userProvider.createUser(user);
+
+      delete formUser.password;     //Deleta o password do formulário
+      formUser.uid = authUser.uid;  //Cria o campo uid para usuário e atribui o uid do AuthUser
+
+      this.userProvider.createUser(formUser);
     })
   }
 

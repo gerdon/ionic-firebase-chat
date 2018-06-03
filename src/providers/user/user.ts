@@ -16,15 +16,15 @@ export class UserProvider {
   ) 
   {
     this.userList = this.db.list('/users');
-    // this.userList = this.db.object('/users');
   }
 
-  // createUser(user: User): Promise<void> {
-  //   return this.db.object('/users')
-  //   .set(user)
-  // }
-
+  /**
+   * Cria o usuário com o uid do usuário de autenticação
+   * @param user 
+   */
   createUser(user: User): void {
-    this.db.list('/users').push(user);
+    // this.db.list('/users').push(user);
+    this.db.database.ref(`/users/${user.uid}`).set(user);
+    console.log('Usuário criado!');
   }
 }

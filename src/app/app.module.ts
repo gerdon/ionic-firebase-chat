@@ -36,12 +36,12 @@ const firebaseAppConfig: FirebaseAppConfig = {
     SignupPage
   ],
   imports: [
+    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(firebaseAppConfig),
     BrowserModule,
     HttpClientModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseAppConfig),
-    AngularFireDatabaseModule
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

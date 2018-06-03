@@ -13,9 +13,13 @@ export class AuthProvider {
     public auth: AngularFireAuth,
     public http: HttpClient
   ) {
-    
+
   }
 
+  /**
+   * Criar o usuário de autenticação do firebase com Email e Senha
+   * @param user 
+   */
   createAuthUser(user: {email: string, password: string}): Promise<firebase.User> {
     return this.auth.auth.createUserWithEmailAndPassword(user.email, user.password);
   }
