@@ -12,10 +12,12 @@ import { HomePage } from '../pages/home/home';
 import { LazyloadPage } from './../pages/lazyload/lazyload';
 import { SignupPage } from './../pages/signup/signup';
 
+import { AuthProvider } from '../providers/auth/auth';
 import { UserProvider } from '../providers/user/user';
 
 import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: "AIzaSyDmOLRxyXGKFhmnRT9efZTaeIDHluK_IXg",
@@ -49,10 +51,12 @@ const firebaseAppConfig: FirebaseAppConfig = {
     SignupPage
   ],
   providers: [
+    AuthProvider,
+    AngularFireAuth,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserProvider
+    UserProvider,
   ]
 })
 export class AppModule {}

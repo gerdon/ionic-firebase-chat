@@ -2,7 +2,12 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { User } from './../../models/user.model';
+
+import { AuthProvider } from './../../providers/auth/auth';
 import { UserProvider } from './../../providers/user/user';
+
+import * as firebase from 'firebase/app';
 
 @IonicPage({ name: 'page-signup'})
 @Component({
@@ -14,6 +19,7 @@ export class SignupPage {
   signupForm: FormGroup;
 
   constructor(
+    public authProvider: AuthProvider,
     public formBuilder: FormBuilder,
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -36,11 +42,15 @@ export class SignupPage {
   }
 
   onSubmit(): void {
-    // console.log(this.signupForm.value);
-    this.userProvider.createUser(this.signupForm.value)
-    // .then(() => {
-    //   console.log("Usuário cadastrado");
-    // });
+
+    let user: User = this.signupForm.value;
+
+    this.authProvider.createAuthUser({
+      email: user.email,
+      password: user.password
+    }).then((authUser: firebase.User) => {
+      this.userProvider.createUser(user);
+    })
   }
 
 }
