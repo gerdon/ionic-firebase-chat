@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertController, IonicPage, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
 import 'rxjs/add/operator/first';
 
-
 import { User } from './../../models/user.model';
 
 import { AuthProvider } from './../../providers/auth/auth';

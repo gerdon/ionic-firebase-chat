@@ -10,6 +10,7 @@ import { MyApp } from './app.component';
 
 import { HomePage } from '../pages/home/home';
 import { LazyloadPage } from './../pages/lazyload/lazyload';
+import { SigninPage } from './../pages/signin/signin';
 import { SignupPage } from './../pages/signup/signup';
 
 import { AuthProvider } from '../providers/auth/auth';
@@ -34,6 +35,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
     MyApp,
     HomePage,
     LazyloadPage,
+    SigninPage,
     SignupPage
   ],
   imports: [
@@ -49,6 +51,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
     MyApp,
     HomePage,
     LazyloadPage,
+    SigninPage,
     SignupPage
   ],
   providers: [

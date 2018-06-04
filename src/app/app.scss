@@ -18,3 +18,11 @@
 .auth-icon {
     font-size: 7.0em;
 }
+
+// Cor dos icones do aplicativos
+.item-md ion-icon[item-left], 
+.item-md ion-icon[item-right], 
+.item-md ion-icon[item-start], 
+.item-md ion-icon[item-end] {
+    color: darkslategray;
+}
