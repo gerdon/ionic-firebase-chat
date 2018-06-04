@@ -47,7 +47,7 @@ export class SignupPage {
 
   onSubmit(): void {
 
-    let loading = this.showLoading();
+    let loading = this.showLoading('Por favor, aguarde...');
     let formUser = this.signupForm.value;
     let username: string = formUser.username;
 
@@ -91,9 +91,9 @@ export class SignupPage {
   /**
    * Exibe o load para informar o carregamento
    */
-  private showLoading(): Loading {
+  private showLoading(message: string): Loading {
     let loading: Loading = this.loadingCtrl.create({
-      content: 'Por favor, aguarde...'
+      content: message
     });
 
     loading.present();
