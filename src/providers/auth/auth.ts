@@ -27,4 +27,11 @@ export class AuthProvider extends BaseProvider {
       .catch(this.handlePromiseError);
   }
 
+  signinWithEmail(user: {email: string, password: string}): Promise<boolean> {
+    return this.auth.auth.signInWithEmailAndPassword(user.email, user.password)
+      .then((authState: firebase.User) => {
+        return authState != null;
+      }).catch(this.handlePromiseError);
+  }
+
 }
