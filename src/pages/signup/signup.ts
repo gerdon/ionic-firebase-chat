@@ -5,6 +5,8 @@ import 'rxjs/add/operator/first';
 
 import { User } from './../../models/user.model';
 
+import { HomePage } from '../home/home';
+
 import { AuthProvider } from './../../providers/auth/auth';
 import { UserProvider } from './../../providers/user/user';
 
@@ -66,6 +68,7 @@ export class SignupPage {
             this.userProvider.createUser(formUser)
               .then(() => {
                 console.log('Usuário cadastrado!');
+                this.navCtrl.setRoot(HomePage);
                 loading.dismiss();
               }).catch((error: any) => {
                 console.log(error);
