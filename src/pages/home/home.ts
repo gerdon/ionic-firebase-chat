@@ -1,3 +1,4 @@
+import { AuthProvider } from './../../providers/auth/auth';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
@@ -19,8 +20,13 @@ export class HomePage {
 
 
   constructor(
+    public auth: AuthProvider,
     public navCtrl: NavController,
     public userProvider: UserProvider) {
+  }
+  
+  ionViewDidEnter(){
+    return this.auth.authenticated;
   }
 
   ionViewDidLoad(){

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import { AlertController, IonicPage, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -88,7 +88,7 @@ export class SigninPage extends BaseProvider {
   }
 
   /**
-   * Exibe um alert com uma mensagem
+      * Exibe um alert com uma mensagem
    * @param message
    */
   private showAlert(message: string): void {
@@ -96,6 +96,25 @@ export class SigninPage extends BaseProvider {
       message: message,
       buttons: ['Ok']
     }).present();
+  }
+
+  /**
+   * Setar página Home como principal
+   */
+  onHomePage(): void {
+    this.navCtrl.setRoot(HomePage)
+      .then((hasAcess: boolean) => {
+        console.log("Autorizado: ", hasAcess);
+      }).catch(err => {
+        console.log("Não autorizado: ", err);
+      });
+  }
+
+  /**
+   * Logout
+   */
+  onLogout(): void {
+    this.authProvider.logout();
   }
 
 }

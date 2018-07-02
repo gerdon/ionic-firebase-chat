@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/first';
 
 import { User } from './../../models/user.model';
 
@@ -34,4 +35,21 @@ export class AuthProvider extends BaseProvider {
       }).catch(this.handlePromiseError);
   }
 
+  logout(): Promise<any> {
+    return this.auth.auth.signOut();
+  }
+
+  /**
+   * Verifica se o usuário está autenticado
+   */
+  get authenticated(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.auth
+        .authState
+        .first()
+        .subscribe((authUser: firebase.User) => {
+          (authUser) ? resolve(true) : reject(false);
+        });
+    });
+  }
 }
